@@ -3,9 +3,12 @@ const cv = require('opencv4nodejs');
 const robot = require('robotjs');
 const _ = require('lodash');
 robot.setMouseDelay(2);
+const screenSize = robot.getScreenSize();
 
 const startX = 50;
 const startY = 500;
+const ratioX = screenSize.width /1920;  //Dont know how to get real resolution
+const ratioY = screenSize.height /1080;
 
 const grayImage = async () => {
     while (true) {
@@ -58,7 +61,7 @@ const grayImage = async () => {
             console.log("Color: ", colors);
             console.log("Unique Color: ", uniqueColor);
             const colorImg = grayImg.cvtColor(cv.COLOR_GRAY2BGR);
-            robot.moveMouse(0.8 * (uniqueColor.vector.center.x + startX), 0.8 * (uniqueColor.vector.center.y + startY));
+            robot.moveMouse(ratioX * (uniqueColor.vector.center.x + startX), ratioY * (uniqueColor.vector.center.y + startY));
             robot.mouseClick();
             colorImg.drawCircle(uniqueColor.vector.center, uniqueColor.vector.radius, new cv.Vec(196, 0, 0), 4, cv.LINE_AA);
             await cv.imshow('canvasOutput', colorImg);
